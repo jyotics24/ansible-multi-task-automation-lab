@@ -1,0 +1,52 @@
+---
+# Multi-Task Ansible Automation Lab
+# This playbook demonstrates:
+# - HTTPD installation
+# - Service management
+# - File creation
+# - Content deployment
+# - Permission management
+
+- name: Multi-task Infrastructure Automation
+  hosts: app_servers
+  become: yes   # Run tasks with sudo privileges
+
+  tasks:
+
+    # Install Apache HTTPD package
+    - name: Install httpd package
+      yum:
+        name: httpd
+        state: present
+
+    # Start and enable Apache service
+    - name: Ensure httpd service is running and enabled
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    # Create index.html if it does not exist
+    - name: Ensure index.html exists
+      file:
+        path: /var/www/html/index.html
+        state: touch
+
+    # Add structured content to index.html safely (idempotent)
+    - name: Deploy sample web content
+      blockinfile:
+        path: /var/www/html/index.html
+        block: |
+          Welcome to XfusionCorp!
+
+          This is Nautilus sample file, created using Ansible!
+
+          Please do not modify this file manually!
+
+    # Set correct ownership and permissions
+    - name: Set ownership and permissions for index.html
+      file:
+        path: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: '0655'

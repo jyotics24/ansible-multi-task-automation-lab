@@ -1,0 +1,7 @@
+# Ansible Inventory File
+# Application Servers
+
+[app_servers]
+stapp01
+stapp02
+stapp03
